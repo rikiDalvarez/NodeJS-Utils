@@ -85,28 +85,88 @@ const { ChildProcess } = require("child_process");
 
 //N2E2
 
-const { spawn } = require("child_process")
-const os = require("os")
+// const { spawn } = require("child_process")
+// const os = require("os")
 
-function listContent() {
+// function listContent() {
 
-	const dir = os.homedir()
-	const output = spawn("ls", [dir])
+// 	const dir = os.homedir()
+// 	const output = spawn("ls", [dir])
 
-	output.stdout.on("data", (data) => {
-		console.log(`content of directory ${data}`)
-	});
+// 	console.log({ output })
 
-	output.stderr.on("error", (data) => {
-		console.error(`Error: ${data}`)
-	});
+// 	output.stdout.on("data", (data) => {
+// 		console.log(`content of directory ${data}`)
+// 	});
 
-	output.on("close", (code) => {
-		console.log(`process finished with code ${code}`)
-	})
+// 	output.stderr.on("error", (data) => {
+// 		console.error(`Error: ${data}`)
+// 	});
+
+// 	output.on("close", (code) => {
+// 		console.log(`process finished with code ${code}`)
+// 	})
+// }
+
+// listContent()
+
+//N3 E1
+
+// function createCodFiles(fileName) {
+// 	const fileContent = fs.readFileSync(fileName);
+
+// 	const hexFileName = `${path.parse(fileName).name}_hex.txt`;
+// 	const hexContent = Buffer.from(fileContent).toString('hex');
+// 	fs.writeFileSync(hexFileName, hexContent);
+
+// 	const base64FileName = `${path.parse(fileName).name}_base64.txt`;
+// 	const base64Content = Buffer.from(fileContent).toString('base64');
+// 	fs.writeFileSync(base64FileName, base64Content);
+// }
+
+// createCodFiles("./sentence.txt")
+
+const crypto = require("crypto")
+function encriptFiles(fileName1, fileName2) {
+
+	//contenido del archivo
+	const fileContent1 = fs.readFileSync(fileName1);
+	const fileContent2 = fs.readFileSync(fileName2);
+
+	const iv = crypto.randomBytes(16);
+
+	const key = crypto.randomBytes(24);
+
+	//crea un objeto de cifrado con el algorithmomaes-192
+	const encrypter = crypto.createCipheriv("aes-192-cbc", key, iv);
+
+	//encripta el contenido del archivo
+	const encryptedContent = Buffer.concat([encrypter.update(fileContent1), encrypter.final()]);
+
+	//create the file name update to be created
+	const fileUpdate1 = `${path.parse(fileName1).name}_hex_encrypted.txt`
+
+	//add the content to be written in the file
+	const hexContent = Buffer.from(encryptedContent).toString("hex")
+
+	//create the file
+	fs.writeFileSync(fileUpdate1, hexContent);
+
+	//encrypt content of 2 file
+	const encryptedContent2 = Buffer.concat([encrypter.update(fileContent2), encrypter.final()]);
+
+	// //create name path of the secondfile
+	const fileUpdate2 = `${path.parse(fileName2).name}_base64_encrypted.txt`
+
+	// //add the content from the 2 file
+	const base64Content = Buffer.from(encryptedContent2).toString("base64")
+
+	//create file
+	fs.writeFileSync(fileUpdate2, base64Content)
+
+	//delete files
+	// fs.unlinkSync()
+
 }
 
-listContent()
-
-
-//
+encriptFiles("./sentence_hex.txt", "./sentence_base64.txt")
