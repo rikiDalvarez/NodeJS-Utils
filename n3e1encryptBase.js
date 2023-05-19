@@ -2,17 +2,17 @@ const crypto = require("crypto")
 const fs = require("fs")
 const path = require("path")
 
-function encryptBase(filePath) {
+const iv = crypto.randomBytes(16);
+
+const key = crypto.randomBytes(24);
+
+function encryptBase(filePath, iv, key) {
 	const content = fs.readFileSync(filePath)
 	console.log(content);
 
-	const iv = crypto.randomBytes(16);
+	const cipheriv = crypto.createCipheriv("aes-192-cbc", key, iv);
 
-	const key = crypto.randomBytes(24);
-
-	const objEncrypt = crypto.createCipheriv("aes-192-cbc", key, iv);
-
-	const contentEncrypted = Buffer.concat([objEncrypt.update(content), objEncrypt.final()])
+	const contentEncrypted = Buffer.concat([cipheriv.update(content), cipheriv.final()])
 
 	const fileUpdatedName = `${path.parse(filePath).name}_encrypted.txt`;
 
@@ -24,4 +24,4 @@ function encryptBase(filePath) {
 
 }
 
-encryptBase("./sentence_base64.txt")
+encryptBase("./sentence_base64.txt", iv, key)

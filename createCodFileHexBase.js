@@ -1,13 +1,18 @@
 //N3 E1
+//encodificar archivo a hex y a base64
 const fs = require("fs")
 const path = require("path")
 
-function createCodFiles(fileName) {
+
+function createCodFileHexBase(fileName) {
+
+
 	const fileContent = fs.readFileSync(fileName);
 	console.log(fileContent)
 
 	const hexFileName = `${path.parse(fileName).name}_hex.txt`;
-	const hexContent = Buffer.from(fileContent).toString('hex');
+	// const hexContent = Buffer.from(fileContent).toString('hex');
+	const hexContent = fileContent.toString("hex");
 	fs.writeFileSync(hexFileName, hexContent);
 
 	const base64FileName = `${path.parse(fileName).name}_base64.txt`;
@@ -15,7 +20,7 @@ function createCodFiles(fileName) {
 	fs.writeFileSync(base64FileName, base64Content);
 }
 
-createCodFiles("./sentence.txt")
+module.exports = createCodFileHexBase;
 
 
 //encrypt file	
@@ -31,10 +36,10 @@ createCodFiles("./sentence.txt")
 // 	const key = crypto.randomBytes(24);
 
 // 	//crea un objeto de cifrado con el algorithmomaes-192
-// 	const encrypter = crypto.createCipheriv("aes-192-cbc", key, iv);
+// 	const cipher = crypto.createCipheriv("aes-192-cbc", key, iv);
 
 // 	//encripta el contenido del archivo
-// 	const encryptedContent = Buffer.concat([encrypter.update(fileContent1), encrypter.final()]);
+// 	const encryptedContent = Buffer.concat([cipher.update(fileContent1), cipher.final()]);
 
 // 	//create the file name update to be created
 // 	const fileUpdate1 = `${path.parse(fileName1).name}_hex_encrypted.txt`
@@ -46,7 +51,7 @@ createCodFiles("./sentence.txt")
 // 	fs.writeFileSync(fileUpdate1, hexContent);
 
 // 	//encrypt content of 2 file
-// 	const encryptedContent2 = Buffer.concat([encrypter.update(fileContent2), encrypter.final()]);
+// 	const encryptedContent2 = Buffer.concat([cipher.update(fileContent2), cipher.final()]);
 
 // 	// //create name path of the secondfile
 // 	const fileUpdate2 = `${path.parse(fileName2).name}_base64_encrypted.txt`

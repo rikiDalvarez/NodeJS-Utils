@@ -21,4 +21,4 @@ function listContent() {
 	})
 }
 
-listContent()
+module.exports = listContent;
