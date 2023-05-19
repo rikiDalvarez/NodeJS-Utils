@@ -21,5 +21,18 @@
 
 //n3
 // codificar archivo a hex y base64
-const createCodFileHexBase = require("./createCodFileHexBase")
-createCodFileHexBase("2023.txt")
+// const createCodFileHexBase = require("./createCodFileHexBase")
+// createCodFileHexBase("2023.txt")
+
+// encrypt file with algo aes-192-cbc and delete inicial file
+const crypto = require("crypto")
+const password = "0000"
+const iv = Buffer.alloc(16, 0)
+const key = crypto.scryptSync(password, "salt", 24);
+const encryptFiles = require("./encryptFiles")
+function encryptFilesAndDelete(filename1, filename2) {
+	encryptFiles(filename1, key, iv);
+	encryptFiles(filename2, key, iv);
+}
+
+encryptFilesAndDelete("./2023_hex.txt", "./2023_base64.txt");

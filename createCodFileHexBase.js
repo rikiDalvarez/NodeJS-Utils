@@ -6,9 +6,7 @@ const path = require("path")
 
 function createCodFileHexBase(fileName) {
 
-
 	const fileContent = fs.readFileSync(fileName);
-	console.log(fileContent)
 
 	const hexFileName = `${path.parse(fileName).name}_hex.txt`;
 	// const hexContent = Buffer.from(fileContent).toString('hex');

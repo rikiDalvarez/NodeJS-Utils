@@ -2,37 +2,57 @@ const fs = require("fs");
 const crypto = require("crypto")
 const path = require("path")
 
-const iv = crypto.randomBytes(16);
-const key = crypto.randomBytes(24)
 
 function encryptFiles(fileName, key, iv) {
 
-	let data = fs.readFileSync(fileName);
-
-	const cipher = crypto.createCipheriv("aes-192-cbc", key, iv);
-	let encrypted = cipher.update(data);
-	encrypted += cipher.final()
-
-	console.log(encrypted)
-
 	const outputPath = `${path.parse(fileName).name}_encrypted.txt`;
 
-	const dataToWrite = Buffer.from(encrypted).toString("hex")
+	let dataStream = fs.createReadStream(fileName);
+	let outputDataStream = fs.createWriteStream(outputPath)
 
-	fs.writeFileSync(outputPath, dataToWrite)
+	const cipher = crypto.createCipheriv("aes-192-cbc", key, iv);
 
+	let encrypted;
+
+	dataStream.on("data", (data) => {
+		encrypted = cipher.update(data);
+		outputDataStream.write(encrypted);
+	})
+
+	//wasnt working with the params "utf-8", "hex"
+	// dataStream.on("data", (data) => {
+	// 	encrypted = cipher.update(data, "utf-8", "hex");
+	// 	outputDataStream.write(encrypted);
+	// })
+
+	dataStream.on("end", () => {
+		outputDataStream.end();
+	})
+
+	fs.unlinkSync(fileName)
 }
 
 function decryptFile(fileName, key, iv) {
+
 	const decipher = crypto.createDecipheriv("aes-192-cbc", key, iv);
 
-	const data = fs.readFileSync(fileName);
-	let decrypt = decipher.update(data);
-	decrypt += decipher.final();
 
 	const outputFileName = `${path.parse(fileName).name}_decrypted.txt`;
-	fs.writeFileSync(outputFileName, decrypt);
+
+	const dataStream = fs.createReadStream(fileName);
+	let outputDataStream = fs.createWriteStream(outputFileName)
+
+	let decrypted;
+
+	dataStream.on("data", (data) => {
+		decrypted = decipher.update(data);
+		outputDataStream.write(decrypted);
+	})
+
+	dataStream.on("end", () => {
+		outputDataStream.end()
+	})
+
 }
 
-// encryptFiles("./2023_base64.txt", key, iv)
-decryptFile("./2023_encrypted.txt", key, iv)
+module.exports = encryptFiles;
