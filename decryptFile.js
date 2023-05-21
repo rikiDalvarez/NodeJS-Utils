@@ -3,6 +3,7 @@ const fs = require("fs");
 const crypto = require("crypto")
 const path = require("path")
 
+
 function decryptFile(fileName, key, iv) {
 
 	const decipher = crypto.createDecipheriv("aes-192-cbc", key, iv);
@@ -25,3 +26,5 @@ function decryptFile(fileName, key, iv) {
 	})
 
 }
+
+module.exports = decryptFile;
