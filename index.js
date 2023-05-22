@@ -1,11 +1,11 @@
 
 //n1e1
-const writeFile = require("./writeFile")
-writeFile("log")
+// const writeFile = require("./writeFile")
+// writeFile("log")
 
 // //n1e2
 // const readFile = require("./readFile")
-// console.log(readFile());
+// readFile();
 
 // //n1e3
 // const compressFile = require("./compressFile")
@@ -21,8 +21,8 @@ writeFile("log")
 
 // //n3
 // // codificar archivo a hex y base64
-// const createCodFileHexBase = require("./createCodFileHexBase")
-// createCodFileHexBase("./2023.txt")
+const createCodFileHexBase = require("./createCodFileHexBase")
+createCodFileHexBase("./2023.txt")
 
 // // Variables
 // const crypto = require("crypto")

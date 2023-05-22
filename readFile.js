@@ -8,7 +8,9 @@ function readFile(filePath) {
 		content = new Date();
 		filePath = `${content.getUTCFullYear()}.txt`
 	}
-	return fs.readFileSync(filePath, "utf8")
+	let test = fs.readFileSync(filePath, "utf8")
+	console.log(test)
+	return test
 }
 
 module.exports = readFile;
